@@ -1,0 +1,25 @@
+policies:
+- name: s3-bucket-last-used
+  resource: s3
+  filters:
+  - type: metrics
+    name: BucketSizeBytes
+    statistics: Maximum
+    days: 365
+    value: 0
+  actions:
+  - type: mark-for-op
+    op: delete
+    tag: "custodian_last_used"
+    msg: "S3 bucket not used in the last 365 days"
+    days: 1
+  - type: notify
+    template: default
+    subject: "S3 Buckets with no activity the last year "
+    violation_desc: "These S3 buckets have had no activity in the past year."
+    action_desc: "They have been marked for deletion."
+    to:
+    - s3://stuller-unsued-report/s3-unused-buckets
+    transport:
+      type: sqs
+      queue: <https://sqs.region.amazonaws.com/account-id/queue-name>

@@ -1,0 +1,9 @@
+PolicyName: "unused-s3"
+Permissions:
+  - Action:
+      - "s3:Describe*"
+      - "s3:TerminateInstances"
+      - "s3:CreateTags"
+      - "s3:DeleteTags"
+    Resource:
+      - "*"
